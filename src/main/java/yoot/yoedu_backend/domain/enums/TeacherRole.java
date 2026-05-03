@@ -1,4 +1,4 @@
-package yoot.yoedu_backend.common.enums;
+package yoot.yoedu_backend.domain.enums;
 
 public enum TeacherRole {
     TEACHER,

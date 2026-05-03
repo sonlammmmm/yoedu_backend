@@ -1,10 +1,13 @@
 package yoot.yoedu_backend.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import yoot.yoedu_backend.common.ApiResponse;
 import yoot.yoedu_backend.domain.entity.Student;
+import yoot.yoedu_backend.dto.student.StudentResponse;
+import yoot.yoedu_backend.dto.student.StudentUpsertRequest;
 import yoot.yoedu_backend.service.StudentService;
 
 import java.util.List;
@@ -18,43 +21,31 @@ public class StudentController {
     private final StudentService studentService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Student>>> getStudents() {
-        return ResponseEntity.ok(ApiResponse.success("Success", studentService.findAll()));
+    public ResponseEntity<List<StudentResponse>> findAll() {
+        return ResponseEntity.ok(studentService.findAll());
 
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<ApiResponse<Student>> getStudentById(@PathVariable("id") Long id) {
-        Optional<Student> student = studentService.findById(id);
-
-        if (student.isPresent()) {
-            return ResponseEntity.ok(ApiResponse.success("Success", student.get()));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<StudentResponse> findById(@PathVariable Long id) {
+        return studentService.findById(id)
+                .map(stu -> ResponseEntity.ok(stu))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Student>> create(@RequestBody Student student){
-        return ResponseEntity.ok(ApiResponse.success("Success", studentService.save(student)));
+    public ResponseEntity<StudentResponse> create(@Valid @RequestBody StudentUpsertRequest req) {
+        return ResponseEntity.ok(studentService.create(req));
     }
 
-
     @PutMapping("{id}")
-    public ResponseEntity<ApiResponse<Student>> update(@PathVariable("id") Long id, @RequestBody Student student) {
-        Optional<Student> existing = studentService.findById(id);
-
-        if (existing.isPresent()) {
-            student.setId(id);
-            return ResponseEntity.ok(ApiResponse.success("Success", studentService.save(student)));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<StudentResponse> update(@PathVariable Long id, StudentUpsertRequest req) {
+        return ResponseEntity.ok(studentService.update(id, req));
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<ApiResponse<Student>> delete(@PathVariable("id") Long id){
+    ResponseEntity<?> delete(@PathVariable Long id) throws Exception {
         studentService.deleteById(id);
         return ResponseEntity.ok().build();
     }
-}
+}   

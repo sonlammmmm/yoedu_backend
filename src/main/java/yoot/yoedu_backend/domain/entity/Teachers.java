@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import yoot.yoedu_backend.common.enums.TeacherRole;
+import yoot.yoedu_backend.domain.enums.TeacherRole;
 import yoot.yoedu_backend.domain.AuditableEntity;
 
 @Builder
