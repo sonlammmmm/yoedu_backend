@@ -2,11 +2,10 @@ package yoot.yoedu_backend.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
+import yoot.yoedu_backend.common.exception.NotFoundException;
+import yoot.yoedu_backend.domain.entity.Parents;
 import yoot.yoedu_backend.domain.entity.Student;
-import yoot.yoedu_backend.domain.enums.Gender;
-import yoot.yoedu_backend.domain.enums.Status;
 import yoot.yoedu_backend.dto.parent.ParentResponse;
 import yoot.yoedu_backend.dto.student.StudentResponse;
 import yoot.yoedu_backend.dto.student.StudentUpsertRequest;
@@ -14,8 +13,6 @@ import yoot.yoedu_backend.repository.ParentsRepository;
 import yoot.yoedu_backend.repository.StudentRepository;
 import yoot.yoedu_backend.service.StudentService;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -50,8 +47,12 @@ public class StudentServiceImpl implements StudentService {
 
     public StudentResponse create(StudentUpsertRequest req) {
         Student stu = mapper.map(req, Student.class);
-        parentsRepository.findById(req.getParentId())
-                .ifPresent(p -> stu.setParents(p));
+        //Kiểm tra tồn tại của parent trước khi gán
+        if (req.getParentId() != null) {
+        Parents parent = parentsRepository.findById(req.getParentId())
+                .orElseThrow(() -> new NotFoundException("Parent with id " + req.getParentId() + " not found"));
+        stu.setParents(parent);
+        }
         stu.setCreatedAt(LocalDateTime.now());
         stu.setUpdatedAt(LocalDateTime.now());
         Student result = studentRepository.save(stu);
@@ -63,8 +64,12 @@ public class StudentServiceImpl implements StudentService {
         Student stu = mapper.map(req, Student.class);
         stu.setId(id);
 
-        parentsRepository.findById(req.getParentId())
-                .ifPresent(p -> stu.setParents(p));
+        //Kiểm tra tồn tại của parent trước khi gán
+        if (req.getParentId() != null) {
+        Parents parent = parentsRepository.findById(req.getParentId())
+                .orElseThrow(() -> new NotFoundException("Parent with id " + req.getParentId() + " not found"));
+        stu.setParents(parent);
+        }
         stu.setUpdatedAt(LocalDateTime.now());
         Student result = studentRepository.save(stu);
 

@@ -5,7 +5,6 @@ import lombok.*;
 import yoot.yoedu_backend.domain.enums.Gender;
 import yoot.yoedu_backend.domain.enums.Status;
 import yoot.yoedu_backend.domain.AuditableEntity;
-import yoot.yoedu_backend.dto.parent.ParentResponse;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

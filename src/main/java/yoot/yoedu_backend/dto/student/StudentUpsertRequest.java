@@ -21,6 +21,7 @@ public class StudentUpsertRequest {
     @Size(min = 2)
     private String student_code;
 
+    @Size(min = 2, max = 100, message = "Full name must be between 2 and 100 characters") 
     private String full_name;
 
     private LocalDate dateOfBirth;
@@ -36,6 +37,7 @@ public class StudentUpsertRequest {
     @Pattern(regexp="^(84|0[35789])+([0-9]{8})$")
     private String phone;
 
+    @NotNull(message = "Parent ID is required")
     private Long parentId;
 
     private Status status;
