@@ -1,5 +1,6 @@
 package yoot.yoedu_backend.dto.student;
 
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class StudentUpsertRequest {
 
+    @Size(min = 2)
     private String student_code;
 
     private String full_name;
@@ -29,12 +31,17 @@ public class StudentUpsertRequest {
 
     private String school_name;
 
+
+    @NotBlank
+    @Pattern(regexp="^(84|0[35789])+([0-9]{8})$")
     private String phone;
 
     private Long parentId;
 
     private Status status;
 
+    @Min(0)
+    @Max(10)
     private BigDecimal lastestScore;
 
     private String note;

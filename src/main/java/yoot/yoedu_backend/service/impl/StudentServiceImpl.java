@@ -32,7 +32,14 @@ public class StudentServiceImpl implements StudentService {
     }
 
     private StudentResponse map(Student student) {
-        return mapper.map(student, StudentResponse.class);
+        StudentResponse response = mapper.map(student, StudentResponse.class);
+        if (student.getParents() != null) {
+            ParentResponse parentResponse = mapper.map(student.getParents(), ParentResponse.class);
+            parentResponse.setCreated_at(student.getParents().getCreatedAt());
+            parentResponse.setUpdated_at(student.getParents().getUpdatedAt());
+            response.setParent(parentResponse);
+        }
+        return response;
     }
 
 
@@ -40,9 +47,6 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.findById(id).map(s -> map(s));
     }
 
-//    public Student save(Student student){
-//        return studentRepository.save(student);
-//    }
 
     public StudentResponse create(StudentUpsertRequest req) {
         Student stu = mapper.map(req, Student.class);
@@ -67,7 +71,10 @@ public class StudentServiceImpl implements StudentService {
         return map(result);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Long id) throws Exception {
+        if (!studentRepository.existsById(id)) {
+            throw new Exception("Student not found");
+        }
         studentRepository.deleteById(id);
     }
 }
