@@ -8,3 +8,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+app:
+  jwt:
+    issuer: yoedu-dev
+    secret: ${APP_JWT_SECRET:tran-sy-son-lam-yoedu-dev-070424}
+    access-token-ttl-minutes: 15
+    refresh-token-ttl-days: 30

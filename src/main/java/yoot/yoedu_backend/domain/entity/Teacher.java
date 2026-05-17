@@ -16,7 +16,7 @@ import yoot.yoedu_backend.domain.AuditableEntity;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Teachers extends AuditableEntity {
+public class Teacher extends AuditableEntity {
 
     @Column(length = 20, nullable = false, unique = true)
     private String teacher_code;

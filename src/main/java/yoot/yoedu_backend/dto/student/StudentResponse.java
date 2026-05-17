@@ -1,6 +1,8 @@
 package yoot.yoedu_backend.dto.student;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,6 +39,8 @@ public class StudentResponse {
 
     private Status status;
 
+    @Min(value = 0)
+    @Max(value = 10)
     private BigDecimal lastestScore;
 
     private String note;

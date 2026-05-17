@@ -2,6 +2,7 @@ package yoot.yoedu_backend.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import yoot.yoedu_backend.common.ApiResponse;
 import yoot.yoedu_backend.domain.entity.Parents;
@@ -18,6 +19,7 @@ public class ParentController {
     private final ParentsService parentsService;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ApiResponse<List<Parents>>> getParents() {
         return ResponseEntity.ok(ApiResponse.success("Success", parentsService.findAll()));
     }

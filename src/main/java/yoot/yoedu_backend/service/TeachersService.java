@@ -1,16 +1,16 @@
 package yoot.yoedu_backend.service;
 
-import yoot.yoedu_backend.domain.entity.Teachers;
+import yoot.yoedu_backend.domain.entity.Teacher;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface TeachersService {
-    List<Teachers> findAll();
+    List<Teacher> findAll();
 
-    Optional<Teachers> findById(Long id);
+    Optional<Teacher> findById(Long id);
 
-    Teachers save(Teachers teachers);
+    Teacher save(Teacher teacher);
 
     void deleteById(Long id);
 }
