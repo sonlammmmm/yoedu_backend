@@ -18,6 +18,11 @@ public class CourseServiceImpl implements CourseService {
 
     public Optional<Course> findById(Long id) { return courseRepository.findById(id); }
 
+    @Override
+    public List<Course> findByCourseActive() {
+        return courseRepository.findByCourseActive();
+    }
+
     public Course save(Course course) { return courseRepository.save(course); }
 
     public void deleteById(Long id) {

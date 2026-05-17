@@ -5,7 +5,6 @@ import lombok.Data;
 import yoot.yoedu_backend.domain.AuditableEntity;
 import yoot.yoedu_backend.domain.enums.ClassStatus;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -33,7 +32,7 @@ public class CourseClass extends AuditableEntity {
 
     @ManyToOne
     @JoinColumn(name = "main_teacher_id", nullable = false)
-    private Teacher teacher;
+    private Teacher mainTeacher;
 
     @ManyToOne
     @JoinColumn(name = "assistant_teacher_id")
