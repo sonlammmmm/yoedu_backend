@@ -3,6 +3,8 @@ package yoot.yoedu_backend.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import yoot.yoedu_backend.common.exception.BadRequestException;
 import yoot.yoedu_backend.common.exception.NotFoundException;
 import yoot.yoedu_backend.domain.entity.Parents;
 import yoot.yoedu_backend.domain.entity.Student;
@@ -81,5 +83,19 @@ public class StudentServiceImpl implements StudentService {
             throw new Exception("Student not found");
         }
         studentRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public Student getStudentForParent(Long studentId, Long parentId) throws NotFoundException {
+        Student student = getStudent(studentId);
+        if (student.getParents() == null || student.getParents().getId() != parentId) {
+            throw new org.springframework.security.access.AccessDeniedException("Student does not belong to current parent account");
+        }
+        return student;
+    }
+
+    public Student getStudent(Long id) throws NotFoundException {
+        return studentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Student not found: " + id));
     }
 }

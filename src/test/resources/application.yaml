@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:yoedu_test;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+
+app:
+  jwt:
+    issuer: yoedu-test
+    secret: test-secret-not-for-production-please-change-123456
+    access-token-ttl-minutes: 15
+    refresh-token-ttl-days: 30

@@ -20,7 +20,7 @@ public class Enrollment extends AuditableEntity {
     @JoinColumn(name = "course_class_id")
     private CourseClass courseClass;
 
-    private LocalDate enrollAt;
+    private LocalDate enrolledAt;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)

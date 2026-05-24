@@ -20,4 +20,8 @@ public interface StudentService {
     StudentResponse update(Long id, StudentUpsertRequest req);
 
     void deleteById(Long id) throws Exception;
+
+    Student getStudent(Long studentId);
+
+    Student getStudentForParent(Long studentId, Long parentId);
 }

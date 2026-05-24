@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,7 @@ import yoot.yoedu_backend.domain.AuditableEntity;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "teachers")
 public class Teacher extends AuditableEntity {
 
     @Column(length = 20, nullable = false, unique = true)

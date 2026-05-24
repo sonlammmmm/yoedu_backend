@@ -12,10 +12,10 @@ import java.time.LocalDate;
 @Table(name= "course_classes")
 public class CourseClass extends AuditableEntity {
 
-    @Column(columnDefinition = "varchar(20")
+    @Column(length = 20)
     private String classCode;
 
-    @Column(columnDefinition = "varchar(100")
+    @Column(length = 100)
     private String name;
 
     @ManyToOne
@@ -43,8 +43,8 @@ public class CourseClass extends AuditableEntity {
 
     private int maxStudents;
 
-    @Column(columnDefinition = "decimal")
-    private double tuitionFee;
+    @Column(columnDefinition = "float")
+    private float tuitionFee;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)

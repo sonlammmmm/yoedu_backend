@@ -34,7 +34,7 @@ public class CourseClassResponse {
 
     private Integer maxStudents;
 
-    private Double tuitionFee;
+    private float tuitionFee;
 
     private ClassStatus status;
 
