@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import yoot.yoedu_backend.domain.enums.ClassStatus;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -34,7 +35,7 @@ public class CourseClassResponse {
 
     private Integer maxStudents;
 
-    private float tuitionFee;
+    private BigDecimal tuitionFee;
 
     private ClassStatus status;
 

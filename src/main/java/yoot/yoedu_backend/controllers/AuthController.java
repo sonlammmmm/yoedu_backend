@@ -7,14 +7,24 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Tag(name = "Authentication", description = "Authentication and user management endpoints")
 public class AuthController {
 
     private final AuthService authService;
+
+    @PostMapping("/register")
+    public ApiResponse<Void> register(@Valid @RequestBody UserRegisterRequest request) throws yoot.yoedu_backend.common.exception.ConflictException {
+        authService.register(request);
+        return ApiResponse.successMessage("User registered successfully");
+    }
 
     @PostMapping("/login")
     public ApiResponse<AuthResponse> login(@Valid @RequestBody LoginRequest request) {

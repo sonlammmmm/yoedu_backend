@@ -51,14 +51,17 @@ public class CourseClassServiceImpl implements CourseClassService {
                 .orElseThrow(() -> new NotFoundException("Room with id " + req.getRoomId() + " not found")));
 
         cc.setSlot(scheduleSlotRepository.findById(req.getScheduleSlotId())
-                .orElseThrow(() -> new NotFoundException("Schedule slot with id " + req.getScheduleSlotId() + " not found")));
+                .orElseThrow(() -> new NotFoundException(
+                        "Schedule slot with id " + req.getScheduleSlotId() + " not found")));
 
         cc.setMainTeacher(teachersRepository.findById(req.getMainTeacherId())
-                .orElseThrow(() -> new NotFoundException("Main teacher with id " + req.getMainTeacherId() + " not found")));
+                .orElseThrow(
+                        () -> new NotFoundException("Main teacher with id " + req.getMainTeacherId() + " not found")));
 
         if (req.getAssistantTeacherId() != null) {
             cc.setAssistantTeacher(teachersRepository.findById(req.getAssistantTeacherId())
-                    .orElseThrow(() -> new NotFoundException("Assistant teacher with id " + req.getAssistantTeacherId() + " not found")));
+                    .orElseThrow(() -> new NotFoundException(
+                            "Assistant teacher with id " + req.getAssistantTeacherId() + " not found")));
         } else {
             cc.setAssistantTeacher(null);
         }
@@ -90,7 +93,7 @@ public class CourseClassServiceImpl implements CourseClassService {
     public CourseClassResponse update(Long id, CourseClassUpsertRequest req) throws NotFoundException {
         Optional<CourseClass> courseClass = courseClassRepository.findById(id);
 
-        if(courseClass.isPresent()) {
+        if (courseClass.isPresent()) {
             CourseClass cc = courseClass.get();
 
             copyToCourseClassResponse(req, cc);

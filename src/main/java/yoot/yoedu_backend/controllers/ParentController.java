@@ -8,12 +8,17 @@ import yoot.yoedu_backend.common.ApiResponse;
 import yoot.yoedu_backend.domain.entity.Parents;
 import yoot.yoedu_backend.service.ParentsService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/parents")
 @RequiredArgsConstructor
+@Tag(name = "Parent", description = "Parent management endpoints")
+@SecurityRequirement(name = "jwt")
 public class ParentController {
 
     private final ParentsService parentsService;

@@ -10,12 +10,17 @@ import yoot.yoedu_backend.dto.student.StudentResponse;
 import yoot.yoedu_backend.dto.student.StudentUpsertRequest;
 import yoot.yoedu_backend.service.StudentService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/students")
 @RequiredArgsConstructor
+@Tag(name = "Student", description = "Student management endpoints")
+@SecurityRequirement(name = "jwt")
 public class StudentController {
 
     private final StudentService studentService;

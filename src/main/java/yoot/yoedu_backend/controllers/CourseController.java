@@ -7,12 +7,17 @@ import yoot.yoedu_backend.common.ApiResponse;
 import yoot.yoedu_backend.domain.entity.Course;
 import yoot.yoedu_backend.service.CourseService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/courses")
 @RequiredArgsConstructor
+@Tag(name = "Course", description = "Course management endpoints")
+@SecurityRequirement(name = "jwt")
 public class CourseController {
 
     private final CourseService courseService;

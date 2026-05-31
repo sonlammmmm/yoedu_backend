@@ -1,16 +1,22 @@
 package yoot.yoedu_backend.service;
 
 import yoot.yoedu_backend.domain.entity.Teacher;
+import yoot.yoedu_backend.dto.teacher.TeacherResponse;
+import yoot.yoedu_backend.dto.teacher.TeacherUpsertRequest;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface TeachersService {
-    List<Teacher> findAll();
+    List<TeacherResponse> findAll();
 
-    Optional<Teacher> findById(Long id);
+    Optional<TeacherResponse> findById(Long id);
 
-    Teacher save(Teacher teacher);
+    TeacherResponse create(TeacherUpsertRequest req);
 
-    void deleteById(Long id);
+    TeacherResponse update(Long id, TeacherUpsertRequest req);
+
+    void deleteById(Long id) throws Exception;
+
+    Teacher getTeacher(Long id);
 }

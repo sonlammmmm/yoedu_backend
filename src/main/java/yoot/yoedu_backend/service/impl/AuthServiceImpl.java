@@ -13,6 +13,9 @@ import yoot.yoedu_backend.dto.auth.RefreshTokenRequest;
 import yoot.yoedu_backend.repository.RefreshTokenSessionRepository;
 import yoot.yoedu_backend.repository.UserRepository;
 import yoot.yoedu_backend.security.JwtService;
+import yoot.yoedu_backend.service.EmailService;
+import yoot.yoedu_backend.common.exception.ConflictException;
+import yoot.yoedu_backend.dto.auth.UserRegisterRequest;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -34,6 +37,28 @@ public class AuthServiceImpl implements AuthService {
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
   private final AppJwtProperties jwtProperties;
+  private final EmailService emailService;
+
+  @Override
+  @Transactional
+  public void register(UserRegisterRequest request) throws ConflictException {
+    if (userRepository.findByUsername(request.username()).isPresent()) {
+      throw new ConflictException("Username already exists");
+    }
+
+    User user = new User();
+    user.setUsername(request.username());
+    user.setPasswordHash(passwordEncoder.encode(request.password()));
+    user.setFullName(request.fullName());
+    user.setEmail(request.email());
+    user.setPhone(request.phone());
+    user.setRole(request.role());
+    user.setIsActive(true);
+
+    userRepository.save(user);
+
+    emailService.sendWelcomeEmail(request.email(), request.username(), request.password());
+  }
 
   @Override
   @Transactional

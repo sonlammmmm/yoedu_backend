@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yoot.yoedu_backend.common.exception.BadRequestException;
 import yoot.yoedu_backend.common.exception.NotFoundException;
+import yoot.yoedu_backend.domain.entity.Payment;
 import yoot.yoedu_backend.domain.entity.Promotion;
 import yoot.yoedu_backend.domain.entity.TuitionInvoice;
 import yoot.yoedu_backend.domain.entity.User;
@@ -13,12 +14,12 @@ import yoot.yoedu_backend.domain.enums.DiscountType;
 import yoot.yoedu_backend.domain.enums.InvoiceStatus;
 import yoot.yoedu_backend.dto.billing.InvoiceCreateRequest;
 import yoot.yoedu_backend.dto.billing.InvoiceResponse;
+import yoot.yoedu_backend.dto.billing.PaymentCreateRequest;
+import yoot.yoedu_backend.dto.billing.PaymentResponse;
+import yoot.yoedu_backend.repository.PaymentRepository;
 import yoot.yoedu_backend.repository.PromotionRepository;
 import yoot.yoedu_backend.repository.TuitionInvoiceRepository;
-import yoot.yoedu_backend.service.AuthService;
-import yoot.yoedu_backend.service.BillingService;
-import yoot.yoedu_backend.service.CourseClassService;
-import yoot.yoedu_backend.service.StudentService;
+import yoot.yoedu_backend.service.*;
 
 import java.util.List;
 
@@ -32,8 +33,9 @@ public class BillingServiceImpl implements BillingService {
     private final CourseClassService courseClassService;
     private final AuthService authService;
     private final ModelMapper mapper;
+    private final PaymentRepository paymentRepository;
+    private final EnrollmentService enrollmentService;
 
-    @Override
     @Transactional
     public InvoiceResponse createInvoice(InvoiceCreateRequest request) throws NotFoundException {
         TuitionInvoice invoice = new TuitionInvoice();
@@ -44,7 +46,7 @@ public class BillingServiceImpl implements BillingService {
 
         float originalAmount = request.getOriginalAmount() != 0
                 ? request.getOriginalAmount()
-                : invoice.getCourseClass().getTuitionFee();
+                : (float) invoice.getCourseClass().getTuitionFee();
         invoice.setOriginalAmount(originalAmount);
 
         Promotion promotion = null;
@@ -67,9 +69,9 @@ public class BillingServiceImpl implements BillingService {
         return toInvoiceResponse(tuitionInvoiceRepository.save(invoice));
     }
 
-    @Override
     @Transactional(readOnly = true)
-    public List<InvoiceResponse> findInvoicesByStudent(Long studentId, String username) throws BadRequestException, NotFoundException {
+    public List<InvoiceResponse> findInvoicesByStudent(Long studentId, String username)
+            throws BadRequestException, NotFoundException {
         User user = authService.findActiveUserByUsername(username);
         if (user.getRole().name().equals("PARENT")) {
             studentService.getStudentForParent(studentId, user.getParent().getId());
@@ -77,7 +79,6 @@ public class BillingServiceImpl implements BillingService {
         return tuitionInvoiceRepository.findByStudentId(studentId).stream().map(this::toInvoiceResponse).toList();
     }
 
-    @Override
     public float calculateDiscount(float originalAmount, Promotion promotion) {
         if (promotion.getDiscountType() == DiscountType.PERCENT) {
             return originalAmount * promotion.getDiscountValue() / 100;
@@ -85,7 +86,6 @@ public class BillingServiceImpl implements BillingService {
         return promotion.getDiscountValue();
     }
 
-    @Override
     public InvoiceResponse toInvoiceResponse(TuitionInvoice item) {
         InvoiceResponse result = mapper.map(item, InvoiceResponse.class);
         result.setStudentId(item.getStudent().getId());
@@ -98,5 +98,60 @@ public class BillingServiceImpl implements BillingService {
             result.setPromotionName(item.getPromotion().getName());
         }
         return result;
+    }
+
+    @Transactional
+    public PaymentResponse createPayment(PaymentCreateRequest request, String username)
+            throws NotFoundException, BadRequestException {
+        TuitionInvoice invoice = tuitionInvoiceRepository.findById(request.getInvoiceId())
+                .orElseThrow(() -> new NotFoundException("Invoice not found: " + request.getInvoiceId()));
+        if (request.getPaidAmount() <= 0) {
+            throw new BadRequestException("Paid amount must be greater than 0");
+        }
+
+        User cashier = authService.findActiveUserByUsername(username);
+        Payment payment = new Payment();
+        payment.setInvoice(invoice);
+        payment.setPaymentCode(request.getPaymentCode());
+        payment.setPaidAmount(request.getPaidAmount());
+        payment.setPaymentMethod(request.getPaymentMethod());
+        payment.setPaidAt(request.getPaidAt());
+        payment.setCashierUser(cashier);
+        payment.setNote(request.getNote());
+        Payment savedPayment = paymentRepository.save(payment);
+
+        float newAmountPaid = invoice.getAmountPaid() + request.getPaidAmount();
+        float balance = invoice.getFinalAmount() - newAmountPaid;
+        invoice.setAmountPaid(newAmountPaid);
+        invoice.setBalanceAmount(balance);
+        invoice.setStatus(calculateInvoiceStatus(balance, newAmountPaid));
+        tuitionInvoiceRepository.save(invoice);
+
+        return toPaymentResponse(savedPayment);
+    }
+
+    private InvoiceStatus calculateInvoiceStatus(float balance, float amountPaid) {
+        if (balance < 0) {
+            return InvoiceStatus.OVERPAID;
+        }
+        if (balance == 0) {
+            return InvoiceStatus.PAID;
+        }
+        if (amountPaid > 0) {
+            return InvoiceStatus.PARTIAL;
+        }
+        return InvoiceStatus.UNPAID;
+    }
+
+    private PaymentResponse toPaymentResponse(Payment item) {
+        PaymentResponse response = mapper.map(item, PaymentResponse.class);
+        response.setInvoiceId(item.getInvoice().getId());
+        response.setInvoiceCode(item.getInvoice().getInvoiceCode());
+        response.setPaymentMethod(item.getPaymentMethod().toString());
+        if (item.getCashierUser() != null) {
+            response.setCashierUserId(item.getCashierUser().getId());
+            response.setCashierUsername(item.getCashierUser().getUsername());
+        }
+        return response;
     }
 }

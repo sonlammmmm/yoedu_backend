@@ -7,12 +7,17 @@ import yoot.yoedu_backend.common.ApiResponse;
 import yoot.yoedu_backend.domain.entity.Room;
 import yoot.yoedu_backend.service.RoomService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/rooms")
 @RequiredArgsConstructor
+@Tag(name = "Room", description = "Room management endpoints")
+@SecurityRequirement(name = "jwt")
 public class RoomController {
 
     private final RoomService roomService;

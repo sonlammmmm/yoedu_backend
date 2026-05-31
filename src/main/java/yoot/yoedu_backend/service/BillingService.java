@@ -6,6 +6,8 @@ import yoot.yoedu_backend.domain.entity.Promotion;
 import yoot.yoedu_backend.domain.entity.TuitionInvoice;
 import yoot.yoedu_backend.dto.billing.InvoiceCreateRequest;
 import yoot.yoedu_backend.dto.billing.InvoiceResponse;
+import yoot.yoedu_backend.dto.billing.PaymentCreateRequest;
+import yoot.yoedu_backend.dto.billing.PaymentResponse;
 
 import java.util.List;
 
@@ -17,4 +19,6 @@ public interface BillingService {
     float calculateDiscount(float originalAmount, Promotion promotion);
 
     InvoiceResponse toInvoiceResponse(TuitionInvoice item);
+
+    PaymentResponse createPayment(PaymentCreateRequest request, String username);
 }

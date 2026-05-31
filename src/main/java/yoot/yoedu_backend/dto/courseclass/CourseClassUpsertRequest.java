@@ -2,7 +2,6 @@ package yoot.yoedu_backend.dto.courseclass;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import yoot.yoedu_backend.domain.enums.ClassStatus;
@@ -38,9 +37,7 @@ public class CourseClassUpsertRequest {
 
     LocalDate endDate;
 
-    @NotNull
-    @PositiveOrZero
-    Float tuitionFee;
+    float tuitionFee;
 
     @NotNull
     ClassStatus status;

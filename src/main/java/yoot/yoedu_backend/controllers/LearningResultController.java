@@ -19,9 +19,14 @@ import yoot.yoedu_backend.dto.learningresult.LearningResultCreateRequest;
 import yoot.yoedu_backend.dto.learningresult.LearningResultResponse;
 import yoot.yoedu_backend.service.LearningResultService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/learning-result")
 @RequiredArgsConstructor
+@Tag(name = "Learning Result", description = "Learning results management endpoints")
+@SecurityRequirement(name = "jwt")
 public class LearningResultController {
     private final LearningResultService learningResultService;
 

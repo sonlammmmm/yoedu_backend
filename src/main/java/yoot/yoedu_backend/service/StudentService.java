@@ -13,7 +13,7 @@ public interface StudentService {
 
     Optional<StudentResponse> findById(Long id);
 
-//    Student save(Student student);
+    // Student save(Student student);
 
     StudentResponse create(StudentUpsertRequest req);
 
@@ -24,4 +24,6 @@ public interface StudentService {
     Student getStudent(Long studentId);
 
     Student getStudentForParent(Long studentId, Long parentId);
+
+    List<StudentResponse> findByParentId(Long parentId);
 }

@@ -43,7 +43,6 @@ public class CourseClass extends AuditableEntity {
 
     private int maxStudents;
 
-    @Column(columnDefinition = "float")
     private float tuitionFee;
 
     @Enumerated(EnumType.STRING)
