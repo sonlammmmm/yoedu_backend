@@ -1,0 +1,20 @@
+package yoot.yoedu_backend.dto.parent;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class NotificationCard {
+    public Long id;
+    public String type;
+    public String title;
+    public String content;
+    public Boolean isRead;
+    public LocalDateTime createdAt;
+
+}

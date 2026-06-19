@@ -1,10 +1,26 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/yoedu_demo?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/yoedu_demo?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: root
     password: slam7424
   jpa:
     properties:
       hibernate:
         format_sql: true
+
+app:
+  jwt:
+    issuer: yoedu-dev
+    secret: ${APP_JWT_SECRET:tran-sy-son-lam-yoedu-dev-070424}
+    access-token-ttl-minutes: 15
+    refresh-token-ttl-days: 30
+  springdoc:
+    api-docs:
+      enabled: true
+    swagger-ui:
+      enabled: true
+      path: /swagger-ui.html
+      disable-swagger-default-url: true
+      operations-sorter: alpha
+      tags-sorter: alpha

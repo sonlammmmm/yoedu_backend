@@ -1,0 +1,23 @@
+package yoot.yoedu_backend.dto.parent;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class InvoiceCard {
+    private Long id;
+    private String invoiceCode;
+    private String studentName;
+    private String className;
+    private LocalDate billingMonth;
+    private float finalAmount;
+    private float amountPaid;
+    private float balanceAmount;
+    private String status;
+    private LocalDate dueDate;
+}

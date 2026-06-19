@@ -1,0 +1,19 @@
+package yoot.yoedu_backend.dto.parent;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ParentDashboardResponse {
+    private Long parentId;
+    private String parentName;
+    private String username;
+    private List<StudentCard> students;
+    private List<InvoiceCard> invoices;
+    private List<NotificationCard> notifications;
+}
